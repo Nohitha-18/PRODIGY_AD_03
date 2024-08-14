@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            background-image: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #333;
+        }
+
+        .stopwatch {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #display {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .controls {
+            margin-top: 10px;
+        }
+
+        .controls button {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .controls button:hover {
+            background-color: #ddd;
+            transform: scale(1.05);
+        }
+
+        .controls button:active {
+            background-color: #bbb;
+            transform: scale(0.95);
+        }
+
+        #start {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #pause {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #reset {
+            background-color: #2196f3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch">
+        <div id="display">
+            <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">00</span>
+        </div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="pause">Pause</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+    <script>
+        let startTime;
+        let updatedTime;
+        let difference;
+        let tInterval;
+        let running = false;
+
+        const minutesDisplay = document.getElementById('minutes');
+        const secondsDisplay = document.getElementById('seconds');
+        const millisecondsDisplay = document.getElementById('milliseconds');
+
+        function startTimer() {
+            if (!running) {
+                startTime = new Date().getTime();
+                tInterval = setInterval(getShowTime, 1);
+                running = true;
+            }
+        }
+
+        function pauseTimer() {
+            if (running) {
+                clearInterval(tInterval);
+                running = false;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(tInterval);
+            running = false;
+            minutesDisplay.textContent = '00';
+            secondsDisplay.textContent = '00';
+            millisecondsDisplay.textContent = '00';
+        }
+
+        function getShowTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((difference % 1000) / 10);
+
+            minutesDisplay.textContent = formatTime(minutes);
+            secondsDisplay.textContent = formatTime(seconds);
+            millisecondsDisplay.textContent = formatTime(milliseconds);
+        }
+
+        function formatTime(time) {
+            return time < 10 ? '0' + time : time;
+        }
+
+        document.getElementById('start').addEventListener('click', startTimer);
+        document.getElementById('pause').addEventListener('click', pauseTimer);
+        document.getElementById('reset').addEventListener('click', resetTimer);
+    </script>
+</body>
+</html>
